@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %} 
+       
+    {% include "header.html" %}
+
+    <!-- ================ % Order Details List ================= -->
+    <div class="detail">
+        <div class="recentOrders">
+            <div class="cardHeader" >
+                <h2>Liste des biens Supprimer</h2>
+                {% comment %} <a href="{% url 'Biens:ajout' %}" class="btn">Ajouter un Bien</a> {% endcomment %}
+            </div>
+        {% if messages %}
+		{% for message in messages %}
+		<h3 class="alert alert-danger" style= "color:green; text-align:center;" role="alert">
+			{{message}}
+		</h3>
+		{% endfor %}
+	    {% endif %}
+            <table>
+                <thead>
+                    <tr>
+
+                        <td>ID</td>
+                        <td>Type</td>
+                        <td>Noms</td>
+                        <td>Proprietaire</td>
+                        <td>Adresse</td>
+                        <td>Date_supressions</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                {% if biens %}
+                <tbody>
+                    {% comment %} {%  if n.type == "Terrain" %}
+                    <!-- affiche le avec ceci -->
+                    <img src="{{n.image.url}}" alt="product"> {% endcomment %}
+                    <tr>
+                        {% comment %} <td>
+
+                            {% if n.type.name == "Maison" %}
+                                <img src="{% static 'images/maison.jpg' %}" alt="Maison" width="30">
+                            {% elif n.type.name == "Appartement" %}
+                                <img src="{% static 'images/appartement.jpg' %}" alt="Appartement" width="30">
+                            {% elif n.type.name == "Champs" %}
+                                <img src="{% static 'images/champs.jpg' %}" alt="Champs" width="30">
+                            {% elif n.type.name == "Terrain" %}
+                                <img src="{% static 'images/terrain.jpg' %}" alt="Terrain" width="30">
+                            {% elif n.type.name == "Immeuble" %}
+                                <img src="{% static 'images/immeuble.jpg' %}" alt="Immeuble" width="30">
+                            {% elif n.type.name == "Bureau" %}
+                                <img src="{% static 'images/bureau.png' %}" alt="Bureau" width="30">
+                            {% elif n.type.name == "Entreprise" %}
+                                <img src="{% static 'images/entreprise.jpg' %}" alt="Entreprise" width="30">
+                            {% else %}
+                                <img src="{% static 'images/default.jpg' %}" alt="Default" width="30">
+                            {% endif %}
+
+                        </td> {% endcomment %}
+                        {% for n in biens %}
+
+                        
+                        <td>{{n.id}}</td>
+                        <td>{{n.type}}</td>
+                        <td>{{n.nom}}</td>
+                        <td>{{n.proprietaire}}</td>
+                        <td>{{n.adresse}}</td>
+                        <td> 
+                            Supprimé le {{ n.date_operateur_supprimer|date:"d-m-Y" }}
+                        </td>
+                        <td> 
+                            <div class="cardHeader" >
+                                <a href="{% url 'Biens:supprimer' n.id %}" style="background:red; font-size: 20px; color:white;"><ion-icon name="trash-outline"></ion-icon></a> 
+                                <a href="{% url 'Biens:restaurer_bien' n.id %}" style="background:blue; font-size: 20px; color:white;"><ion-icon name="refresh-outline"></ion-icon></a> 
+                                <button  type="submit"></button>
+                            </div>
+                        </td>
+                        {% comment %}{% endcomment %}
+                        
+                    </tr>
+                    {% endfor %}
+            </tbody>
+            {% endif %}
+            </table>
+        </div>
+    </div>
+
+    {% comment %} {% include "footer.html" %} {% endcomment %}
+{% endblock %}

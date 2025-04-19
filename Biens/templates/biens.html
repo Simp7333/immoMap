@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %} 
+       
+    {% include "header.html" %}
+    <div class="search" style="margin: 0 0;">
+        <label>
+            <form class="d-flex" action ="{% url 'Biens:recherche' %}" method='get'>
+                <input   type="text" placeholder="Recherchez un biens..." name="biens">
+                <ion-icon style="margin-top:10px" name="search-outline"></ion-icon>
+            </form>
+            
+        </label>
+    </div>
+
+    <!-- ================ % Order Details List ================= -->
+    <div class="detail">
+        <div class="recentOrders">
+            <div class="cardHeader" >
+                <h2>Liste des biens disponibles</h2>
+                <a href="{% url 'Biens:ajout' %}" class="btn">Ajouter un Bien</a>
+            </div> 
+            <table>
+                <thead>
+                    <tr>
+
+                        <td></td>
+                        <td>ID</td>
+                        <td>Type</td>
+                        <td>Noms</td>
+                        <td>Proprietaire</td>
+                        <td>Dimensions</td>
+                        <td>Adresse</td>
+                        <td>Localisations</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                {% for n in object_list %}
+                {% load static %}
+                <tbody id="Biens-{{ n.id }}">
+                    {% comment %} {%  if n.type == "Terrain" %}
+                    <!-- affiche le avec ceci -->
+                    <img src="{{n.image.url}}" alt="product"> {% endcomment %}
+                    <tr>
+                        <td>
+
+                            {% if n.type.name == "Maison" %}
+                                <img src="{% static 'images/maison.png' %}" alt="Maison" width="30">
+                            {% elif n.type.name == "Appartement" %}
+                                <img src="{% static 'images/appartement.png' %}" alt="Appartement" width="30">
+                            {% elif n.type.name == "Champs" %}
+                                <img src="{% static 'images/champs.png' %}" alt="Champs" width="30">
+                            {% elif n.type.name == "Terrain" %}
+                                <img src="{% static 'images/terrain.png' %}" alt="Terrain" width="30">
+                            {% elif n.type.name == "Immeuble" %}
+                                <img src="{% static 'images/immeuble.png' %}" alt="Immeuble" width="30">
+                            {% elif n.type.name == "Bureau" %}
+                                <img src="{% static 'images/bureau.png' %}" alt="Bureau" width="30">
+                            {% elif n.type.name == "Entreprise" %}
+                                <img src="{% static 'images/entreprise.png' %}" alt="Entreprise" width="30">
+                            {% elif n.type.name == "Usine" %}
+                                <img src="{% static 'images/Usine.png' %}" alt="Usine" width="30">
+                            {% else %}
+                                <img src="" alt="Default" width="30">
+                            {% endif %}
+
+                        </td>
+                        
+                        <td>{{n.id}}</td>
+                        <td>{{n.type}}</td>
+                        <td>{{n.nom}}</td>
+                        <td>{{n.proprietaire}}</td>
+                        <td>{{n.dimension}}</td>
+                        <td>{{n.adresse}}</td>
+                        <td>{{n.latitude}},{{n.longitude}}</td>
+                        <td> 
+                            <a href="{% url 'Biens:modifier' n.id %}" style="background:green; font-size: 20px; color:white;"> <ion-icon name="pencil-outline"></ion-icon></a> 
+                            <a href="{% url 'Biens:delete' n.id %}" style="background:red; font-size: 20px; color:white;"><ion-icon name="trash-outline"></ion-icon></a> 
+                            <a href="{% url 'Biens:detail' n.id %}" style="background:blue; font-size: 20px; color:white;"><ion-icon name="information-circle-outline"></ion-icon></a> 
+                        </td>
+                        {% comment %}{% endcomment %}
+                    </tr>
+                </tbody>
+                {% endfor %}
+
+            </table>
+        </div>
+    </div>
+   
+    {% comment %} {% include "footer.html" %} {% endcomment %}
+
+</body>
+
+</html>
+
+{% endblock %}

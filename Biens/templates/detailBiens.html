@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    {% include "header.html" %}
+    <!-- ================ Order Details List ================= -->
+    <div class="details">
+        <div class="recentOrders">
+            <div class="cardHeader text-center" >
+                <h2>Detail du bien {{n.type}} ({{n.nom}})</h2>
+            </div> 
+            
+
+                <p>nom: {{n.nom}}</p>
+                
+                <p>Biens de : {{n.proprietaire}}</p>
+                
+                <p>Type : {{n.type}}</p>
+                
+                <p>Dimensions : {{n.dimension}}</p>
+
+                {% if n.modifie_par %}
+                    <p>Modifier le  {{ n.date_operateur_modification|date:"d-m-Y" }} par {{ n.modifie_par.username }} </p>
+                {% else %}
+                    <p>Jamais modifié.</p> 
+                {% endif %}
+                {% if n.image %}
+                <!-- affiche le avec ceci -->
+                    <img src="{{n.image.url}}" alt="Biens"  width="100">
+                {% else %}
+                <!-- alors "si il n'y a pas d'image dans la base de données pour ce produit" -->
+                 <!-- affiche une image par defaut  -->
+                    <img src="{% static '1.jpeg' %}" alt="Aucune Image">
+                {% endif %}
+
+                <div class="cardHeader text-center" >
+                {% if n.document %}
+                    <a class="btn" href="{% url 'Biens:telecharger_document' n.id %}">Télécharger le document</a>
+                {% else %}
+                    <p>Aucun document disponible</p>
+                {% endif %}             
+                    <a id="itineraire" href="#" class="btn" style="background:red" target="_blank">Suivre l'itinéraire</a>
+                </div>  
+                
+
+                {% comment %} <a class="inline-btn">{{n.document}} telecharger le document</a> {% endcomment %}
+        </div>
+        
+        
+        <!-- =================  New Customers ================ -->
+
+        <div class="recentCustomers" id="map" width="100">
+           
+          
+        </div> 
+        {% comment %} <a href="https://www.google.com/maps/dir/?api=1&origin=Ma+Position&destination={{n.latitude}},{{n.longitude}}" target="_blank">
+            Suivre l'itinéraire
+        </a> {% endcomment %}
+       
+
+
+    </div>   
+    
+        
+    <script>
+        var map = L.map('map').setView([{{ n.latitude }}, {{ n.longitude }}], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+    
+        // Définir les URLs des images en tant que variables JavaScript
+        var staticImages = {
+            "Maison": "{% static 'images/maison.png' %}",
+            "Appartement": "{% static 'images/appartement.png' %}",
+            "Champs": "{% static 'images/champs.png' %}",
+            "Terrain": "{% static 'images/terrain.png' %}",
+            "Immeuble": "{% static 'images/immeuble.png' %}",
+            "Bureau": "{% static 'images/bureau.png' %}",
+            "Entreprise": "{% static 'images/entreprise.png' %}",
+            "default": "{% static 'images/default.webp' %}"
+        };
+        // Assurer que `n.type`, `n.latitude`, `n.longitude`, `n.nom` sont bien des valeurs valides
+        var imageUrl = staticImages["{{ n.type }}"] || staticImages["default"];
+        var latitude = {{ n.latitude|default:0 }};
+        var longitude = {{ n.longitude|default:0 }};
+        var nom = "{{ n.nom }}";
+    
+        console.log("URL de l'image:", imageUrl);
+        console.log("Latitude:", latitude, "Longitude:", longitude);
+        console.log("Nom du bien:", nom);
+    
+        // Définir une icône personnalisée avec l'image du bien
+        var customIcon = L.icon({
+            iconUrl: imageUrl,
+            iconSize: [50, 50], 
+            iconAnchor: [25, 50], 
+            popupAnchor: [0, -50],
+            crossOrigin: false  
+        });
+    
+        // Ajouter le marqueur sur la carte avec l'icône personnalisée
+        var marker = L.marker([latitude, longitude], { icon: customIcon }).addTo(map)
+            .bindPopup(nom)
+            .openPopup();
+
+
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var userLat = position.coords.latitude;
+                var userLng = position.coords.longitude;
+    
+                // Générer le lien Google Maps avec la vraie position actuelle
+                var mapsUrl = "https://www.google.com/maps/dir/?api=1&origin=" + userLat + "," + userLng + "&destination={{n.latitude}},{{n.longitude}}";
+                
+                document.getElementById("itineraire").href = mapsUrl;
+            }, function(error) {
+                alert("Erreur de localisation: " + error.message);
+            }, { enableHighAccuracy: true });
+        } else {
+            alert("La géolocalisation n'est pas supportée par votre navigateur.");
+        }
+    </script>
+
+    {% comment %} {% include "footer.html"%} {% endcomment %}
+{% endblock  %}
+
+
+
+
+

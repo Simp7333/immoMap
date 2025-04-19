@@ -1,0 +1,124 @@
+
+{% extends "base.html" %}
+
+
+{% block content %} 
+       
+    {% include "header.html" %}
+    <div class="search" style="margin: 0 0;">
+        <label>
+            <input type="text" placeholder="Search here">
+            <ion-icon name="search-outline"></ion-icon>
+        </label>
+    </div>
+
+    <!-- ================ % Order Details List ================= -->
+    <div class="detail">
+        <div class="recentOrders">
+            <div class="cardHeader" >
+                <h2>Liste des Utilisateurs</h2>
+                <a href="{% url 'creation' %}" class="btn">Ajouter un utilisateur</a>
+            </div> 
+
+            <table>
+                <thead>
+                    <tr>
+                        <td>Nom utilisateurs</td>
+                        <td>telephones</td>
+                        <td>Permission</td>
+                        <td>Status</td>
+                    </tr>
+
+                </thead>
+                {% for profil in profils %}
+                <tbody id="User-{{ profil.id }}">
+                    <tr>
+                        <td style="display : inline-flex;">
+                            {% if profil.photo_profile %}
+
+                            <div class="user"  style="margin-right:15px;">
+                                <div class="account-info-name">
+                                    <img src="{{ profil.photo_profile.url }}" alt="Photo de profil">
+                                </div>
+                            </div>  
+                            {% else %}
+                                <img src="/media/profile_pics/default.jpg" alt="Photo par défaut" width="100" height="100">
+                            
+                            {% endif %}
+
+                            {{ profil.user.username }}
+
+                           
+                        </td>
+                      
+                        <td>{{ profil.number }}</td>
+                        <td>
+                            <a href="{% url 'permission_page' profil.user.id %}">
+                                <button>Gérer Permissions</button>
+                            </a>
+                        </td>
+
+                        <td>
+                            <button class="toggle-status-btn" data-user-id="{{ profil.user.id }}" 
+                                style="background: {% if profil.user.is_active %}green{% else %}red{% endif %}; 
+                                       color: white; border: none; padding: 5px 10px; cursor: pointer;">
+                                {% if profil.user.is_active %}Désactiver{% else %}Activer{% endif %}
+                            </button>
+                        </td>
+                    
+                    </tr>
+                </tbody>
+                {% endfor %}
+
+            </table>
+        </div>
+    </div>
+
+    {% comment %} {% include "footer.html" %} {% endcomment %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".toggle-status-btn").forEach(button => {
+                button.addEventListener("click", function () {
+                    let userId = this.getAttribute("data-user-id");
+                    let button = this;
+    
+                    fetch(`/toggle-user/${userId}/`, {
+                        method: "POST",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRFToken": getCSRFToken()  // Utilise un token CSRF pour sécurité
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (data.new_status) {
+                                button.style.background = "green";
+                                button.textContent = "Désactiver";
+                            } else {
+                                button.style.background = "red";
+                                button.textContent = "Activer";
+                            }
+                        }
+                    })
+                    .catch(error => console.error("Erreur :", error));
+                });
+            });
+        });
+    
+        function getCSRFToken() {
+            let cookieValue = null;
+            let cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i].trim();
+                if (cookie.startsWith("csrftoken=")) {
+                    cookieValue = cookie.substring("csrftoken=".length, cookie.length);
+                    break;
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+    
+{% endblock %}

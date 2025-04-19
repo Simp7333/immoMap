@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %} 
+       
+    {% include "header.html" %}
+    <div class="search" style="margin: 0 0;">
+        <label>
+            <input type="text" placeholder="Search here">
+            <ion-icon name="search-outline"></ion-icon>
+        </label>
+    </div>
+
+    <!-- ================ % Order Details List ================= -->
+    {% if user.is_superuser %}
+    <div class="detail">
+        <div class="recentOrders">
+            <form action="{% url 'Biens:supprimer' object.id %}" method="post">
+                {% csrf_token %}
+                <h1 style="color: black;">voulez-vous  Supprimer Definitivement cet Bien?</h1>
+                <div class="cardHeader" >
+                    <a class="btn" style="background:red; left" href="{% url 'Biens:corbeille' %}"> Annuler </a>
+                    <button class="btn">OUI</button>  
+                </div>
+            </form>
+            
+        </div>
+    </div>
+    {% else %}
+    <div class="detail">
+        <div class="recentOrders">
+            <form method="post">
+                {% csrf_token %}
+                <h1 style="color: black;">Desoler pour supprimer vous devriez etre un super utlisateur Voulez vous le contacter?</h1>
+                <div class="cardHeader" >
+                    <a class="btn" style="background:red; left" href="{% url 'Biens:biens' %}"> Annuler </a>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

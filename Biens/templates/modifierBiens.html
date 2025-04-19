@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifications des données</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/style1.css' %}">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
+</head>
+<body>
+
+
+    <div class="container-fluid px-1 py-5 mx-auto">
+        <div class="row d-flex justify-content-center">
+            <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+                <h3>Modification des Biens</h3>
+                {% if user.is_superuser %}
+                <div class="card">
+
+                    <form class="form-card" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %} style="color: red;">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <div class="row justify-content-between text-left">
+                        {{form.as_p}}     
+                        <div class="form-group col-sm-6">
+                        <input type="submit" class="btn-block btn-primary" value="Modifier">
+                        <a href="{% url 'Biens:biens' %}" class="btn btn-danger">Revenir</a>
+
+                        </div>      
+                    </div>
+                       
+                    </form>
+
+                </div>
+                {% else %}
+                <div class="details">
+                    <div class="recentOrders">
+                        <form action="{% url 'Biens:delete' object.id %}" method="post">
+                            {% csrf_token %}
+                            <h1 style="color: black;">Desoler pour modifier un biens vous devriez etre un super utlisateur Voulez vous le contacter?</h1>
+                            <div class="cardHeader" >
+                                <a class="btn" style="background:red; left" href="{% url 'Biens:biens' %}"> Annuler </a>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+                {% endif %}
+        </div>
+    </div>
+    
+   
+    <script src="{% static 'script.js' %}"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+    <script src="{% static 'bootstrap.min.js' %}"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script> -->
+</body>
+</html>

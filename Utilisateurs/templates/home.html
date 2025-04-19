@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+    {% include "header.html" %}
+    <!-- ================ Order Details List ================= -->
+    <div class="details">
+        <div class="recentOrders" id="map">
+          
+        </div>
+        
+        
+        <!-- ================= New Customers ================ -->
+        <div class="recentCustomers">
+            <table>
+                <tr>  
+                  <h4 id ="online-users"></h4>
+                </tr>
+                   
+            </table>
+            
+        </div> 
+    </div>
+    <div class="recentCustomers" Style="color:blue;">
+        <div class="cardBox">
+            {% for n in data %}
+
+            <div class="card" width="50%">
+                <div>
+                    <div class="numbers">{{ n.count }}</div>
+                    <div class="cardName">{{n.categorie}}</div>
+                </div>
+
+                <div class="iconBx">
+                {% if n.categorie == "Maison" %}
+                    <img src="{% static 'images/maison.png' %}" alt="Maison" width="30">
+                {% elif n.categorie == "Chantier" %}
+                    <img src="{% static 'images/chantier.png' %}" alt="Chantier" width="30">
+                {% elif n.categorie == "Magasin" %}
+                    <img src="{% static 'images/magasin.png' %}" alt="Magasin" width="30">
+                {% elif n.categorie == "Usine" %}
+                    <img src="{% static 'images/usine.png' %}" alt="Usine" width="30">
+                {% elif n.categorie == "Champs" %}
+                    <img src="{% static 'images/champs.png' %}" alt="Champs" width="30">
+                {% elif n.categorie == "Terrain" %}
+                    <img src="{% static 'images/terrain.png' %}" alt="Terrain" width="30">
+                {% elif n.categorie == "Immeuble" %}
+                    <img src="{% static 'images/immeuble.png' %}" alt="Immeuble" width="30">
+                {% elif n.categorie == "Appartement" %}
+                    <img src="{% static 'images/appartement.png' %}" alt="Appartement" width="30">
+                {% elif n.categorie == "Bureau" %}
+                    <img src="{% static 'images/bureau.png' %}" alt="Bureau" width="30">
+                {% elif n.categorie == "Entreprise" %}
+                    <img src="{% static 'images/entreprise.png' %}" alt="Entreprise" width="30">
+                {% else %}
+                    <img src="{% static 'images/default.webp' %}" alt="Default" width="30">
+                {% endif %}               
+                </div>
+            </div> 
+
+            {% endfor %}
+        </div>
+        
+    </div> 
+
+
+    <script>
+        function fetchOnlineUsers() {
+            fetch('/api/online-users/')
+                .then(response => response.json())
+                .then(data => {
+                    let usersList = document.getElementById('online-users');
+                    usersList.innerHTML = 'Utilisateurs En Ligne'; // Effacer la liste actuelle
+        
+                    if (data.online_users.length > 0) {
+                        data.online_users.forEach(user => {
+                            let li = document.createElement('li');
+                            li.textContent = user.username;
+                            usersList.appendChild(li);
+                        });
+                    } else {
+                        usersList.innerHTML = '<h3>Aucun utilisateur en ligne</h3>';
+                    }
+                })
+                .catch(error => console.error('Erreur:', error));
+        }
+        
+        // Rafraîchir la liste toutes les 5 secondes
+        setInterval(fetchOnlineUsers, 500);
+        fetchOnlineUsers(); // Charger immédiatement
+
+            // bloquer ctrl 
+        
+        // Initialiser la carte avec un zoom de base
+        var map = L.map('map').setView([12.6392, -8.0029], 10);
+
+        // Ajouter la couche OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            
+        }).addTo(map);
+
+        // Ajouter les positions enregistrées
+        var locations = JSON.parse('{{ locations_json|escapejs }}');  // Récupérer les données Django
+
+        locations.forEach(function(loc) {
+            L.marker([loc.latitude, loc.longitude])
+                .addTo(map)
+                .bindPopup(loc.nom);
+        });
+    </script>
+
+
+    {% comment %} {% include "footer.html" %} {% endcomment %}
+
+{% endblock  %}
+
+
+
+
+

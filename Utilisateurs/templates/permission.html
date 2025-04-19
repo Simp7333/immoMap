@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% include "header.html" %}
+
+    <div class="detail">
+        <div class="recentOrders">
+
+            <div class="container">
+                <label>
+                    <input type="checkbox" id="ajouter" {% if permissions.ajouter %}checked{% endif %}>
+                    Ajouter des biens
+                </label><br>
+                <label>
+                    <input type="checkbox" id="modifier" {% if permissions.modifier %}checked{% endif %}>
+                    Modifier tous les biens
+                </label><br>
+                <label>
+                    <input type="checkbox" id="supprimer" {% if permissions.supprimer %}checked{% endif %}>
+                    Supprimer tous les biens
+                </label><br>
+            
+                <button onclick="updatePermissions()">Mettre à jour</button>
+                
+            </div>
+            
+            
+        </div>
+
+        <script>
+            function updatePermissions() {
+                const data = {
+                    ajouter: document.getElementById("ajouter").checked,
+                    modifier: document.getElementById("modifier").checked,
+                    supprimer: document.getElementById("supprimer").checked
+                };
+    
+                fetch("", {  // L'URL reste la même
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => alert("Permissions mises à jour !"))
+                .catch(error => alert("Erreur lors de la mise à jour"));
+            }
+        </script>
+{% endblock %}

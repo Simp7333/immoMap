@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fen</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+</head>
+
+<body>
+    <!-- =============== Navigation ================ -->
+    <div class="container">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="#">
+                        <span class="icon">
+                            <ion-icon name="logo-"></ion-icon>
+                        </span>
+                        <span class="title">AppGEO</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'acc' %}">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                        <span class="title">Acceuil</span>
+                    </a>
+                </li>
+                {% if user.is_superuser %}
+                <li>
+                    <a href="{% url 'home' %}">
+                        <span class="icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                        <span class="title">Utilisateurs</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                <li>
+                    <a href="{% url 'Biens:biens' %}">
+                        <span class="icon">
+                            <ion-icon name="chatbubble-outline"></ion-icon>
+                        </span>
+                        <span class="title">Biens</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Biens:corbeille' %}">
+                        <span class="icon">
+                            <ion-icon name="Trash-outline"></ion-icon>
+                        </span>
+                        <span class="title">Corbeille</span>
+                    </a>
+                </li>
+
+               
+
+                <li>
+
+                    <a href="{% url 'deconnection' %} ">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                        <span class="title">Deconnexion</span>
+                    </a>
+            
+
+                </li>
+                
+            </ul>
+        </div>
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+        
+            {% block content %}
+                
+            
+            {% endblock  %}
+        {% include "footer.html" %}
+    </div>
+    <!-- =========== Scripts =========  -->
+
+    <script> 
+    // Empêche le clic droit (menu contextuel)
+  
+    </script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+
+    <!-- ====== ionicons ======= -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

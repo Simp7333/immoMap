@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %} 
+       
+    {% include "header.html" %}
+    
+    <!-- ================ % Order Details List ================= -->
+    <div class="detail">
+        <div class="recentOrders">
+            <div class="cardHeader" >
+                <h2>Liste des biens disponibles</h2>
+            </div> 
+            <table>
+                <thead>
+                    <tr>
+
+                        <td>ID</td>
+                        <td>Type</td>
+                        <td>Noms</td>
+                        <td>Proprietaire</td>
+                        <td>Dimensions</td>
+                        <td>Adresse</td>
+                        <td>Localisations</td>
+                        <td>Action</td>
+                    </tr>
+                </thead>
+                {% if donnees %}    
+                {% for n in donnees %}
+                
+                <tbody id="Biens-{{ n.id }}">
+                    {% comment %} {%  if n.type == "Terrain" %}
+                    <!-- affiche le avec ceci -->
+                    <img src="{{n.image.url}}" alt="product"> {% endcomment %}
+                    <tr>
+                        {% comment %} <td>
+
+                            {% if n.type == "Maison" %}
+                                <img src="{% static 'images/maison.jpg' %}" alt="Maison" width="30">
+                            {% elif n.type.name == "Appartement" %}
+                                <img src="{% static 'images/appartement.jpg' %}" alt="Appartement" width="30">
+                            {% elif n.type.name == "Champs" %}
+                                <img src="{% static 'images/champs.jpg' %}" alt="Champs" width="30">
+                            {% elif n.type.name == "Terrain" %}
+                                <img src="{% static 'images/terrain.jpg' %}" alt="Terrain" width="30">
+                            {% elif n.type.name == "Immeuble" %}
+                                <img src="{% static 'images/immeuble.jpg' %}" alt="Immeuble" width="30">
+                            {% elif n.type.name == "Bureau" %}
+                                <img src="{% static 'images/bureau.png' %}" alt="Bureau" width="30">
+                            {% elif n.type.name == "Entreprise" %}
+                                <img src="{% static 'images/entreprise.jpg' %}" alt="Entreprise" width="30">
+                            {% else %}
+                                <img src="{% static 'images/default.jpg' %}" alt="Default" width="30">
+                            {% endif %}
+
+                        </td>
+                         {% endcomment %}
+                        <td>{{n.id}}</td>
+                        <td>{{n.type}}</td>
+                        <td>{{n.nom}}</td>
+                        <td>{{n.proprietaire}}</td>
+                        <td>{{n.dimension}}</td>
+                        <td>{{n.adresse}}</td>
+                        <td>{{n.latitude}},{{n.longitude}}</td>
+                        <td> 
+                            <a href="{% url 'Biens:modifier' n.id %}" style="background:green; font-size: 20px; color:white;"> <ion-icon name="pencil-outline"></ion-icon></a> 
+                            <a href="{% url 'Biens:delete' n.id %}" style="background:red; font-size: 20px; color:white;"><ion-icon name="trash-outline"></ion-icon></a> 
+                            <a href="{% url 'Biens:detail' n.id %}" style="background:blue; font-size: 20px; color:white;"><ion-icon name="information-circle-outline"></ion-icon></a> 
+                        </td>
+                        {% comment %}{% endcomment %}
+                    </tr>
+                </tbody>
+                {% endfor %}
+
+            </table>
+            {% else %}
+            <h1>Aucun resultat ne correspond a ce Noms </h1>
+            {% endif %}
+        </div>
+    </div>
+   
+
+</body>
+
+</html>
+{% endblock %}
