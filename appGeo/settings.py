@@ -81,16 +81,9 @@ WSGI_APPLICATION = 'appGeo.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'appgeo',  # Nom de la base de données
-        'USER': 'LEBEAU',  # Nom de l'utilisateur MySQL
-        'PASSWORD': 'simp73337988@',  # Mot de passe de l'utilisateur MySQL
-        'HOST': 'localhost',
-        'PORT': '3306',  # Par défaut, MySQL utilise le port 3306
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        }
+   'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
